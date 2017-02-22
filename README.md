@@ -4,7 +4,7 @@ node-calibre is (for now) a very simple wrapper that is basically a cleaner way 
 
 # Usage Example
 
-```jsx
+```js
 const Calibre = require('node-calibre');
 
 const calibre = new Calibre({ library: '/path/to/calibre/library' });
