@@ -1,0 +1,6 @@
+- Add methods for each Calibre binary
+  - `Calibre.db.*`, `Calibre.ebookConvert`, etc
+  - Improve error checking by looking at the command's output and checking for specific values based on the the command.
+  - Pass result object instead of string that contains the original full output but also parsed data relevant to the command.
+  - Each method takes relevant arguments, and not just the general `args` and `options` from `run()`.
+- Support using `child_process.spawn()`, and potentially replace `child_process.exec()` entirely with `child_process.spawn()`.  
