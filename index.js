@@ -16,12 +16,9 @@ class Calibre {
    * run by Node's child_process.exec() is logged to console before running.
    * @param {object} [options.execOptions] - The object passed to Node's
    * child_process.exec() as the options argument.
-   * @param {boolean} [options.notifyGUI=false] If false, the 'dont-notify-gui'
-   * option is passed to calibredb commands.
    */
   constructor(options = {}) {
     this.execOptions = options.execOptions || { maxBuffer: 2000 * 1024 };
-    this.notifyGUI = options.notifyGUI || false;
     this.library = options.library || '';
     this.log = options.log || false;
   }
@@ -47,8 +44,6 @@ class Calibre {
       options = Object.assign({
         'library-path': this.library,
       }, options);
-
-      if (!this.notifyGUI) options['dont-notify-gui'] = null;
     }
 
     // Build options string from object
