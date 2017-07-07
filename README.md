@@ -1,5 +1,7 @@
 A simple Node wrapper for Calibre's [command line tools](https://manual.calibre-ebook.com/generated/en/cli-index.html).
 
+Used by [auto-annotator](https://github.com/Xyfir/auto-annotator) and other projects in the [Xyfir Network](https://xyfir.com/#/).
+
 node-calibre is (for now) a very simple wrapper that is basically a cleaner way of using Calibre's CLI via Node's [child_process.exec()](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback), without many extra features added. In the future this package may contain a more full-featured API with methods unique to each of Calibre's binaries and with both better error checking and improved results provided on success. See the [TODO list](https://github.com/Xyfir/node-calibre/blob/master/TODO.md) for more information.
 
 # Usage Example
