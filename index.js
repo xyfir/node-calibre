@@ -61,7 +61,7 @@ class Calibre {
    * @async
    * @param {string} command - The name of the bin and command to run. For
    *  example 'calibredb add' or 'ebook-convert'.
-   * @param {any[]} [args] - An array of argument that the command will accept.
+   * @param {any[]} [args] - An array of arguments that the command will accept.
    *  All arguments are converted to strings, wrapped in "", and escaped.
    * @param {object} [options] - A key:value object containing options that the
    *  command will accept. If an option does not take a value, the key's value
