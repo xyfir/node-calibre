@@ -28,7 +28,37 @@ class Calibre {
   }
 
   /**
+   * Essentially just a Promise-wrapped `child_process.exec()` that gets
+   *  passed `this.execOptions`.
+   * @async
+   * @param {string} command
+   * @param {object} [options] - Will be merged with `this.execOptions`.
+   *  Properties will override properties with the same name in
+   *  `this.execOptions`.
+   * @return {Promise.<string>} A promise that is rejected if the callback of Node's
+   *  child_process.exec() has a value for error or stderr and resolves to the
+   *  callback's stdout if no error occured.
+   */
+  exec(command, options = {}) {
+    return new Promise((resolve, reject) =>
+      process.exec(
+        command,
+        Object.assign({}, this.execOptions, options),
+        (err, stdout, stderr) => {
+          if (err)
+            reject(err);
+          else if (stderr)
+            reject(stderr);
+          else
+            resolve(stdout);
+        }
+      )
+    );
+  }
+
+  /**
    * Runs a command on one of Calibre's binaries.
+   * @async
    * @param {string} command - The name of the bin and command to run. For
    *  example 'calibredb add' or 'ebook-convert'.
    * @param {any[]} [args] - An array of argument that the command will accept.
@@ -55,19 +85,26 @@ class Calibre {
     execString += ' ' + Object
       .entries(options)
       .map(([key, value]) => {
-        let str = '';
         key = camelToKebab(key);
 
-        // Convert s to -s, search to --search
-        if (key.length == 1)
-          str = `-${key}`;
-        else
-          str = `--${key}`;
+        // Support options that can have multiple values
+        // `field: ['a','b','c']` -> `--field "a" --field "b" --field "c"`
+        return (Array.isArray(value) ? value : [value])
+          .map(value => {
+            let option = '';
 
-        // Add option's value
-        if (value !== null) str += ` "${escape(value)}"`;
+            // Convert 's' to '-s', 'search' to '--search'
+            if (key.length == 1)
+              option = `-${key}`;
+            else
+              option = `--${key}`;
 
-        return str;
+            // Add option's value
+            if (value !== null) option += ` "${escape(value)}"`;
+
+            return option;
+          })
+          .join(' ');
       })
       .join(' ');
 
@@ -76,16 +113,7 @@ class Calibre {
 
     if (this.log) console.log('~~node-calibre:', execString);
 
-    return new Promise((resolve, reject) =>
-      process.exec(execString, this.execOptions, (err, stdout, stderr) => {
-        if (err)
-          reject(err);
-        else if (stderr)
-          reject(stderr);
-        else
-          resolve(stdout);
-      })
-    );
+    return this.exec(execString);
   }
 
 }
