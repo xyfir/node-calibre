@@ -77,10 +77,10 @@ A promise that is rejected if the callback of Node's child_process.exec() has a 
 
 This method should only be used if for some reason you need to build your own command string. It's essentially just a Promise-wrapped `child_process.exec()` that gets passed the `execOptions` from the constructor.
 
-- `command: string`
+- `command`: *string*
   - The full command that you want to run.
   - For example: `calibredb list --for-machine --limit 10`.
-- `options: object`
+- `options`: *object*
   - Will be merged with the `execOptions` object that was passed to the constructor.
   - Properties passed will override properties with the same name from `execOptions`.
 
