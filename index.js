@@ -1,3 +1,4 @@
+const camelToKebab = require('./lib/camel-to-kebab');
 const process = require('child_process');
 const escape = require('./lib/escape');
 
@@ -47,27 +48,24 @@ class Calibre {
     let execString = command;
 
     // Add default options to object if for calibredb
-    if (command.indexOf('calibredb') == 0) {
-      options = Object.assign({
-        'library-path': this.library,
-      }, options);
-    }
+    if (command.indexOf('calibredb') == 0)
+      options = Object.assign({libraryPath: this.library}, options);
 
     // Build options string from object
     execString += ' ' + Object
       .entries(options)
-      .map(option => {
+      .map(([key, value]) => {
         let str = '';
+        key = camelToKebab(key);
 
         // Convert s to -s, search to --search
-        if (option[0].length == 1)
-          str = '-' + option[0];
+        if (key.length == 1)
+          str = `-${key}`;
         else
-          str = '--' + option[0];
+          str = `--${key}`;
 
         // Add option's value
-        if (option[1] != null)
-          str += ` "${escape(option[1])}"`;
+        if (value !== null) str += ` "${escape(value)}"`;
 
         return str;
       })
