@@ -1,10 +1,12 @@
 {
   "name": "node-calibre",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "A wrapper for Calibre's command line tools.",
-  "main": "index.js",
+  "main": "dist/Calibre.js",
+  "types": "dist/Calibre.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p ./",
+    "test": "node dist/test"
   },
   "repository": {
     "type": "git",
@@ -15,15 +17,19 @@
     "calibre",
     "ebooks",
     "library",
-    "wrapper",
-    "cli",
-    "class",
-    "promises"
+    "wrapper"
   ],
-  "author": "Xyfir, LLC <contact@xyfir.com> (https://xyfir.com/)",
+  "prettier": {
+    "singleQuote": true
+  },
+  "author": "Xyfir, LLC <contact@xyfir.com> (https://www.xyfir.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Xyfir/node-calibre/issues"
   },
-  "homepage": "https://github.com/Xyfir/node-calibre#readme"
+  "homepage": "https://github.com/Xyfir/node-calibre#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.3",
+    "typescript": "^3.1.6"
+  }
 }
