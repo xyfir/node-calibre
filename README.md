@@ -1,10 +1,10 @@
-A simple Node wrapper for Calibre's [command line tools](https://manual.calibre-ebook.com/generated/en/cli-index.html).
+_A simple Node wrapper for Calibre's [command line tools](https://manual.calibre-ebook.com/generated/en/cli-index.html)._
 
-Used by [xyAnnotations](https://annotations.xyfir.com) and other projects in the [Xyfir Network](https://www.xyfir.com/network).
+Built and maintained by the [Xyfir Network](https://www.xyfir.com).
 
-node-calibre is (for now) a very simple wrapper that is basically a cleaner way of using Calibre's CLI via Node's [child_process.exec()](https://nodejs.org/api/child_process.html), without many extra features added. In the future this package may contain a more full-featured API with methods unique to each of Calibre's binaries and with both better error checking and improved results provided on success.
+node-calibre is mostly a simple wrapper around Calibre's CLI using Node's [child_process.exec()](https://nodejs.org/api/child_process.html), without many extra features added. In the future this package will contain more methods unique to each of Calibre's binaries and with both better error checking and improved results provided on success.
 
-# Usage Example
+# Example
 
 ```ts
 const { Calibre } = require('node-calibre');
@@ -12,8 +12,13 @@ const { Calibre } = require('node-calibre');
 (async () => {
   try {
     const calibre = new Calibre({ library: '/path/to/calibre/library' });
-    let result: string;
 
+    const newFile = await calibre.ebookConvert('/path/to/book.epub', 'pdf', {
+      smartenPunctuation: null
+    });
+    console.log(newFile); // /path/to/book.epub.pdf
+
+    let result: string;
     result = await calibre.run('calibredb add', ['/path/to/book.epub']);
     console.log(result); // Added book ids: ...
 
@@ -71,6 +76,21 @@ Runs a command on one of Calibre's binaries (calibredb, ebook-convert, etc). Fin
 ### Return
 
 A promise that is rejected if the callback of Node's child_process.exec() has a value for error or stderr and resolves to the callback's stdout if no error occurred. Due to how Calibre's command line tools work, most of the time the promise should resolve regardless of whether Calibre encountered an issue. It's up to you to check the resolved result to determine if the command was successful.
+
+## `ebookConvert(input, format, options)`
+
+Wrapper for [ebook-convert](https://manual.calibre-ebook.com/generated/en/ebook-convert.html).
+
+- `input`: _string_
+  - Path to the input file to convert.
+- `format`: _string_
+  - The format (file extension) to convert `input` to.
+- `options`: _object_
+  - Any CLI options for the `ebook-convert` command.
+
+### Return
+
+Full path to the new file.
 
 ## `exec(command[, options])`
 
