@@ -104,4 +104,21 @@ export class Calibre {
 
     return this.exec(execString);
   }
+
+  /**
+   * Wrapper for `ebook-convert`.
+   * @param input - Path to the input file to convert.
+   * @param format - The format (file extension) to convert `input` to.
+   * @param [options] - Any CLI options for the `ebook-convert` command.
+   * @return Full path to the new file.
+   */
+  async ebookConvert(
+    input: string,
+    format: string,
+    options?: any
+  ): Promise<string> {
+    const output = `${input}.${format}`;
+    await this.run('ebook-convert', [input, output], options);
+    return output;
+  }
 }
