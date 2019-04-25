@@ -1,8 +1,12 @@
 import * as assert from 'assert';
 import { Calibre } from './Calibre';
+import { resolve } from 'path';
 
 (async () => {
-  const calibre = new Calibre({ library: '.' });
+  const calibre = new Calibre({
+    library: '.',
+    execOptions: { cwd: resolve(__dirname, '../') }
+  });
   let res: string;
 
   res = await calibre.exec('echo test');
@@ -35,13 +39,13 @@ import { Calibre } from './Calibre';
   res = await calibre.run('calibredb list', [], { forMachine: null });
   assert.equal(res, '[]', 'run: calibredb list --for-machine');
 
-  assert.rejects(
-    calibre.run('ebook-convert', ['test.mobi', 'test.epub']),
-    'run: ebook-convert "test.mobi" "test.epub"'
-  );
-
   try {
     await calibre.run('ebook-convert', ['test.mobi', 'test.epub']);
+    assert.equal(
+      true,
+      false,
+      'run: ebook-convert "test.mobi" "test.epub" (should have failed)'
+    );
   } catch (err) {
     assert.equal(
       err.toString().trim(),
@@ -49,6 +53,9 @@ import { Calibre } from './Calibre';
       'run: ebook-convert "test.mobi" "test.epub" (failed command)'
     );
   }
+
+  const newFile = await calibre.ebookConvert('res/pg98.epub', 'txt');
+  assert.equal(newFile, 'res/pg98.epub.txt', 'ebookConvert');
 
   console.log('Tests complete without error');
 })();
