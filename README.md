@@ -4,44 +4,37 @@ Built and maintained by the [Xyfir Network](https://www.xyfir.com).
 
 node-calibre is mostly a simple wrapper around Calibre's CLI using Node's [child_process.exec()](https://nodejs.org/api/child_process.html), without many extra features added. In the future this package will contain more methods unique to each of Calibre's binaries and with both better error checking and improved results provided on success.
 
-# Example
+# Examples
 
 ```ts
-const { Calibre } = require('node-calibre');
+import { Calibre } from 'node-calibre';
 
-(async () => {
-  try {
-    const calibre = new Calibre({ library: '/path/to/calibre/library' });
+// Create Calibre instance
+const calibre = new Calibre({ library: '/path/to/calibre/library' });
 
-    const newFile = await calibre.ebookConvert('/path/to/book.epub', 'pdf', {
-      smartenPunctuation: null
-    });
-    console.log(newFile); // /path/to/book.epub.pdf
+// Convert ebook from epub to pdf
+const newFile = await calibre.ebookConvert('/path/to/book.epub', 'pdf', {
+  smartenPunctuation: null
+});
+console.log(newFile); // "/path/to/book.epub.pdf"
 
-    let result: string;
-    result = await calibre.run('calibredb add', ['/path/to/book.epub']);
-    console.log(result); // Added book ids: ...
+let result: string;
 
-    result = await calibre.run('ebook-convert', [
-      'path/to/book.epub',
-      'path/to/book.txt'
-    ]);
-    console.log(result); // Output saved to ...
+// Add book to Calibre library
+result = await calibre.run('calibredb add', ['/path/to/book.epub']);
+console.log(result); // "Added book ids: ..."
 
-    result = await calibre.run('calibredb list', [], { limit: 10 });
-    console.log(result); // first 10 books
+// List books in Calibre Library
+result = await calibre.run('calibredb list', [], { limit: 10 });
+console.log(result); // first 10 books
 
-    // You can optionally pass `options` as the second parameter
-    // `forMachine: null` gets converted to `--for-machine`
-    result = await calibre.run('calibredb list', {
-      limit: 10,
-      forMachine: null
-    });
-    console.log(Array.isArray(JSON.parse(result))); // true
-  } catch (err) {
-    console.error(err);
-  }
-})();
+// You can optionally pass `options` as the second parameter
+// `forMachine: null` gets converted to `--for-machine`
+result = await calibre.run('calibredb list', {
+  limit: 10,
+  forMachine: null
+});
+console.log(Array.isArray(JSON.parse(result))); // true
 ```
 
 # API
