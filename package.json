@@ -1,6 +1,6 @@
 {
   "name": "node-calibre",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A wrapper for Calibre's command line tools.",
   "main": "dist/Calibre.js",
   "types": "dist/Calibre.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/Xyfir/node-calibre#readme",
   "devDependencies": {
-    "@types/node": "^11.13.7",
+    "@types/node": "^12.0.2",
     "typescript": "^3.4.5"
   }
 }
