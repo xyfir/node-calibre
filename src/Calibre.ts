@@ -60,45 +60,41 @@ export class Calibre {
    *  command will accept. If an option does not take a value, the key's value
    *  should be an empty string. All values are wrapped in "" and escaped.
    */
-  run(command: string, args: any[] = [], options = {}): Promise<string> {
+  run(command: string, args: any[] = [], options: any = {}): Promise<string> {
     // `options` can be second argument
     if (!Array.isArray(args) && typeof args == 'object')
       (options = args), (args = []);
-
-    let execString = command;
 
     // Add default options to object if for calibredb
     if (command.startsWith('calibredb'))
       options = Object.assign({ libraryPath: this.library }, options);
 
-    // Build options string from object
-    execString +=
-      ' ' +
-      Object.entries(options)
-        .map(([key, value]) => {
-          key = camelToKebab(key);
+    const execString = [
+      command,
+      // Build arguments string from array
+      ...args.map(arg => `"${escape(arg)}"`),
+      // Build options string from object
+      ...Object.entries(options).map(([key, value]) => {
+        key = camelToKebab(key);
 
-          // Support options that can have multiple values
-          // `field: ['a','b','c']` -> `--field "a" --field "b" --field "c"`
-          return (Array.isArray(value) ? value : [value])
-            .map(value => {
-              let option = '';
+        // Support options that can have multiple values
+        // `field: ['a','b','c']` -> `--field "a" --field "b" --field "c"`
+        return (Array.isArray(value) ? value : [value])
+          .map(value => {
+            let option = '';
 
-              // Convert 's' to '-s', 'search' to '--search'
-              if (key.length == 1) option = `-${key}`;
-              else option = `--${key}`;
+            // Convert 's' to '-s', 'search' to '--search'
+            if (key.length == 1) option = `-${key}`;
+            else option = `--${key}`;
 
-              // Add option's value
-              if (value !== null) option += ` "${escape(value)}"`;
+            // Add option's value
+            if (value !== null) option += ` "${escape(value)}"`;
 
-              return option;
-            })
-            .join(' ');
-        })
-        .join(' ');
-
-    // Build arguments string from array
-    execString += ' ' + args.map(arg => `"${escape(arg)}"`).join(' ');
+            return option;
+          })
+          .join(' ');
+      })
+    ].join(' ');
 
     if (this.log) console.log('~~node-calibre:', execString);
 
