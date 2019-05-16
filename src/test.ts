@@ -49,13 +49,15 @@ import { resolve } from 'path';
   } catch (err) {
     assert.equal(
       err.toString().trim(),
-      'Error: Command failed: ebook-convert  "test.mobi" "test.epub"',
+      'Error: Command failed: ebook-convert "test.mobi" "test.epub"',
       'run: ebook-convert "test.mobi" "test.epub" (failed command)'
     );
   }
 
-  const newFile = await calibre.ebookConvert('res/pg98.epub', 'txt');
-  assert.equal(newFile, 'res/pg98.epub.txt', 'ebookConvert');
+  const newFile = await calibre.ebookConvert('res/pg98.epub', 'epub', {
+    epubFlatten: null
+  });
+  assert.equal(newFile, 'res/pg98.epub.epub', 'ebookConvert');
 
   console.log('Tests complete without error');
 })();
