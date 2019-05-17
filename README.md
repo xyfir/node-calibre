@@ -12,11 +12,11 @@ import { Calibre } from 'node-calibre';
 // Create Calibre instance
 const calibre = new Calibre({ library: '/path/to/calibre/library' });
 
-// Convert ebook from epub to pdf
-const newFile = await calibre.ebookConvert('/path/to/book.epub', 'pdf', {
-  smartenPunctuation: null
+// Convert ebook from pdf to epub
+const newFile = await calibre.ebookConvert('/path/to/book.pdf', 'epub', {
+  epubFlatten: null
 });
-console.log(newFile); // "/path/to/book.epub.pdf"
+console.log(newFile); // "/path/to/book.pdf.epub"
 
 let result: string;
 
@@ -100,9 +100,9 @@ This method should only be used if for some reason you need to build your own co
 
 Same as `run()`, which builds a command string and passes it to `exec()`.
 
-# Important Notes
+# Notes
 
 - You should be aware of the `maxBuffer` property of the options object accepted by Node's `child_process.exec()`. It limits the size of output that can be received from a process, in this case one of Calibre's binaries. Unless you set `maxBuffer` as a property in the `execOptions` object, the maximum buffer size will be increased from the default of 200KB to 2MB. The vast majority of commands will get nowhere near this number, however certain commands like `calibredb list` with all fields requested on a large library can get close or even surpass that limit in certain cases. If a command's output exceeds the maxBuffer limit, an error will be thrown.
-- User input can be passed as a value in the `args` array and `options` object of `run()`, but _not_ as a command or an option name.
-- This package does not install Calibre. You must have Calibre already installed and either have Calibre's bin directory in your system's PATH _or_ use the `cwd` property of `execOptions` (see constructor options) to set Calibre's bin directory.
-- Calibre v3 is recommended, but lower versions should also work for the most part.
+- You can safely pass use input as a value in the `args` array and `options` object of `run()`, but _not_ as a command or an option name. In other words, args and option values are are wrapped in double quotes and escaped.
+- **This package does not install Calibre.** You must have Calibre already installed and either have Calibre's bin directory in your system's PATH _or_ use the `cwd` property of `execOptions` (see constructor options) to set Calibre's bin directory.
+- Calibre v3 is recommended, but lower versions will most likely work.
